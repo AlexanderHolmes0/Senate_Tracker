@@ -134,7 +134,6 @@ body <- dashboardBody(
 # Put them together into a dashboardPage
 ui <- shinydashboardPlus::dashboardPage(
   title = "Stonks with Math",
-  skin = "red",
   dashboardHeader(title = "Stonks with Math"),
   sidebar,
   body,
@@ -239,19 +238,19 @@ server <- function(input, output, session) {
       stock() %>%
         model(X_13ARIMA_SEATS(!!sym(input$column) ~ x11())) %>%
         components()
-    } else if (input$model == "STL") {
+    } else if (input$model == "STL" & nrow(stock()) >= 36) {
       stock() %>%
         model(STL(!!sym(input$column))) %>%
         components()
-    } else if (input$model == "SEATS") {
+    } else if (input$model == "SEATS" & nrow(stock()) >= 36) {
       stock() %>%
         model(X_13ARIMA_SEATS(!!sym(input$column) ~ seats())) %>%
         components()
-    } else if (input$model == "Classic - Multi") {
+    } else if (input$model == "Classic - Multi" & nrow(stock()) >= 36) {
       stock() %>%
         model(classical_decomposition(!!sym(input$column), type = "multiplicative")) %>%
         components()
-    } else if (input$model == "Classic - Add") {
+    } else if (input$model == "Classic - Add" & nrow(stock()) >= 36) {
       stock() %>%
         model(classical_decomposition(!!sym(input$column), type = "additive")) %>%
         components()
