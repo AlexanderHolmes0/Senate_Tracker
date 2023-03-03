@@ -1,0 +1,13 @@
+name: SenateTracker
+title: SenateTracker
+username:
+account: aholmes23
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 8465445
+bundleId: 6910239
+url: https://aholmes23.shinyapps.io/SenateTracker/
+when: 1677819310.50912
+lastSyncTime: 1677819310.50914
+asMultiple: FALSE
+asStatic: FALSE
