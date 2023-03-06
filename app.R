@@ -4,13 +4,13 @@ library(shinydashboardPlus)
 library(shinyWidgets)
 library(tidyquant)
 library(fpp3)
-library(plotly)
 library(seasonal)
+library(plotly)
 library(spsComps)
-library(fresh)
 library(DT)
-library(shinyjs)
+library(fresh)
 library(waiter)
+
 Valid_ticks <- read.csv("Tickers.csv")
 
 
@@ -64,7 +64,7 @@ sidebar <- dashboardSidebar(
     ),
     menuItem("Github",
       icon = icon("github"),
-      href = "https://github.com/AlexanderHolmes0"
+      href = "https://github.com/AlexanderHolmes0/Senate_Tracker"
     ),
     selectizeInput("asset",
       "Stock Name:",
@@ -107,26 +107,33 @@ body <- dashboardBody(
       h2("Stock Information"),
       fluidRow(
         box(title = textOutput("title"), background = "maroon", plotlyOutput("series", height = 490), width = 7),
-        box(title = "Stock Quotes", DTOutput("stonk"), width = 5)
+        setShadow(id = "series"),
+        box(title = "Stock Quotes", DTOutput("stonk"), width = 5),
+        setShadow(id = "stonk")
       ),
-      fluidRow(box(title = "Senator Trades", DTOutput("sentable"), width = 12))
+      fluidRow(box(title = "Senator Trades", DTOutput("sentable"), width = 12)),
+      setShadow(id = "sentable")
     ),
     tabItem(
       tabName = "seasonality",
       h2("Seasonality"),
       box(title = textOutput("seas"), background = "maroon", plotlyOutput("season")),
-      box(title = textOutput("seeass"), background = "maroon", plotlyOutput("ggseason"))
+      setShadow(id = "season"),
+      box(title = textOutput("seeass"), background = "maroon", plotlyOutput("ggseason")),
+      setShadow(id = "ggseason")
     ),
     tabItem(
       tabName = "auto",
       h2("Autocorrelation"),
       box(title = textOutput("autoo"), background = "maroon", plotlyOutput("autoq"), width = 8),
+      setShadow(id = "autoq"),
       box(title = "Maximum Lag", sliderInput("lags", "Lag Max Value", value = 12, min = 1, max = 100), width = 4)
     ),
     tabItem(
       tabName = "decomp",
       h2("Decomposition"),
-      box(title = textOutput("decompi"), background = "maroon", plotlyOutput("decompq"), width = 8)
+      box(title = textOutput("decompi"), background = "maroon", plotlyOutput("decompq"), width = 8),
+      setShadow(id = "decompq"),
     )
   )
 )
@@ -159,7 +166,7 @@ server <- function(input, output, session) {
 
 
   senate <- reactive({
-    if (any(input$asset %in% Senator$Ticker)) {
+    if (any(input$asset %in% Senator$Ticker) & !is.null(input$type)) {
       senate <- Senator %>%
         filter(Ticker == input$asset) %>%
         mutate(Transaction.Date = yearmonth(mdy(Transaction.Date))) %>%
@@ -167,35 +174,40 @@ server <- function(input, output, session) {
 
       updateDateRangeInput(session,
         "dates",
-        start = min(senate$Transaction.Date) - 2,
+        start = min(senate$Transaction.Date) - 6,
       )
+    
       senate <- senate %>%
         filter(Type %in% input$type)
-
+      
       senate
     } else {
-      shinyCatch(position = "top-right", stop("No Stonk Trading Senators YET!"))
+      shinyCatch(message("No Stonk Trading Senators YET!"), position = "top-right")
+      NULL
     }
   })
 
 
   stock <- reactive({
-    if (any(input$asset %in% senate()$Ticker)) {
-      tq_get(input$asset, get = "stock.prices", from = input$dates[1], to = input$dates[2] ,complete_cases = TRUE) %>% # add something with date ranges to capture the trades
+    if (any(input$asset %in% senate()$Ticker) & input$asset != "" ) {
+      tq_get(input$asset, get = "stock.prices" , from=input$dates[1],complete_cases = TRUE) %>% # add something with date ranges to capture the trades
         tq_transmute(mutate_fun = to.monthly, indexAt = "lastof") %>%
         mutate(
           date = yearmonth(date),
-          across(2:7, round, 3)
+          across(2:7, \(x) round(x, 3))
         ) %>%
         as_tsibble(index = date)
-    } else {
+    } else if(input$asset != ""){
       tq_get(input$asset, get = "stock.prices", complete_cases = TRUE) %>% # add something with date ranges to capture the trades
         tq_transmute(mutate_fun = to.monthly, indexAt = "lastof") %>%
         mutate(
           date = yearmonth(date),
-          across(2:7, round, 3)
+          across(2:7, \(x) round(x, 3))
         ) %>%
         as_tsibble(index = date)
+    }else{
+      NULL
+      
     }
   })
 
@@ -210,7 +222,7 @@ server <- function(input, output, session) {
   })
 
   output$sentable <- renderDataTable({
-    if (!(is.null(stock())) & any(input$asset %in% Senator$Ticker)) {
+    if (!(is.null(stock())) & !is.null(senate())) {
       sen <- senate()
       sen$Transaction.Date <- format(as.Date(sen$Transaction.Date), "%Y-%m")
       sen %>%
@@ -220,76 +232,103 @@ server <- function(input, output, session) {
   })
 
   output$series <- renderPlotly({
-    if (!(is.null(stock()))) {
+    if (!(is.null(stock())) & ( is.null(senate()))){  # | nrow(senate()) == 0 )) {
       series <- autoplot(stock(), !!sym(input$column)) +
         labs(y = paste0(input$asset, " ", input$column))
-    }
-    if (any(input$asset %in% Senator$Ticker) & !is.null(stock()) & !is.null(input$type)) {
+      series
+    } else if ( !is.null(senate()) & !is.null(stock())) {
+      series <- autoplot(stock(), !!sym(input$column)) +
+        labs(y = paste0(input$asset, " ", input$column))
       cols <- c("Purchase" = "green", "Sale (Full)" = "red", "Sale (Partial)" = "orange", "Exchange" = "steelblue")
+      
       series <- series +
         geom_vline(data = senate(), aes(xintercept = Transaction.Date, color = Type, text = Name)) +
         scale_color_manual(values = cols)
+      series
     }
-    series
+    
   })
 
   models <- reactive({
+    if(!is.null(stock())){
     if (input$model == "X11" & nrow(stock()) >= 36) {
       stock() %>%
         model(X_13ARIMA_SEATS(!!sym(input$column) ~ x11())) %>%
         components()
     } else if (input$model == "STL" & nrow(stock()) >= 36) {
       stock() %>%
-        model(STL(!!sym(input$column))) %>%
+        model(STL(!!sym(input$column),robust=T)) %>%
         components()
     } else if (input$model == "SEATS" & nrow(stock()) >= 36) {
       stock() %>%
         model(X_13ARIMA_SEATS(!!sym(input$column) ~ seats())) %>%
         components()
-    } else if (input$model == "Classic - Multi" & nrow(stock()) >= 36) {
+    } else if (input$model == "Classic - Multi") {
       stock() %>%
         model(classical_decomposition(!!sym(input$column), type = "multiplicative")) %>%
         components()
-    } else if (input$model == "Classic - Add" & nrow(stock()) >= 36) {
+    } else if (input$model == "Classic - Add") {
       stock() %>%
         model(classical_decomposition(!!sym(input$column), type = "additive")) %>%
         components()
     } else {
-      shinyCatch(position = "top-right", stop("This stonk is too young! (Less than 36 months old)"))
-    }
+      shinyCatch(position = "top-right", message("This stonk is too young! (Less than 36 months old)"))
+
+    }}else { NULL}
   })
 
   output$season <- renderPlotly({
+    if(!is.null(models())){
     if (input$model == "STL") {
       autoplot(models(), season_year)
-    } else {
+    } else{
       autoplot(models(), seasonal)
-    }
+    }}
+    
   })
 
   output$ggseason <- renderPlotly({
-    if (input$model == "STL") {
-      gg_season(models(), season_year)
-    } else {
-      gg_season(models(), seasonal)
+    if(!is.null(models())){
+      if (input$model == "STL") {
+        gg_season(models(), season_year)
+      } else{
+        gg_season(models(), seasonal)
+      }
     }
   })
 
   output$autoq <- renderPlotly({
+    if(!is.null(models())){
     if (nrow(stock()) > 1) {
       stock() %>%
         ACF(!!sym(input$column), lag_max = input$lags) %>%
         autoplot()
     } else {
-      shinyCatch(position = "top-right", stop("Not enuff time mannn!"))
-    }
+      shinyCatch(position = "top-right", message("Not enuff time mannn!"))
+    }}
   })
 
   output$decompq <- renderPlotly({
-    autoplot(models())
+    if( !is.null(models())){
+      autoplot(models())
+    }
   })
 }
 
 
 # Run the application
 shinyApp(ui = ui, server = server)
+
+# stonk <- tq_get("AAPL", get = "stock.prices" ,from="2001-01-01",complete_cases = TRUE) %>% # add something with date ranges to capture the trades
+#   tq_transmute(mutate_fun = to.monthly, indexAt = "lastof") %>%
+#   mutate(
+#     date = yearmonth(date),
+#     across(2:7, \(x) round(x, 3))
+#   ) %>%
+#   as_tsibble(index = date) 
+# 
+# try <- stonk %>%
+#   model(X_13ARIMA_SEATS(open ~ seats())) %>%
+#   components()
+# print(try)
+# autoplot(try)
