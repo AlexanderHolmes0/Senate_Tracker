@@ -10,27 +10,7 @@
 </head>
 
       
-<ul>
-<li><a href="#first-things-first">First Things First</a></li>
-<li><a href="#maths-stuff-books">Maths Stuff 📚</a>
-<ul>
-<li><a href="#seasonality">Seasonality</a></li>
-<li><a href="#autocorrelation">Autocorrelation</a></li>
-<li><a href="#decomposition">Decomposition</a></li>
-<li><a href="#additive">Additive</a></li>
-<li><a href="#multiplicative">Multiplicative</a></li>
-<li><a href="#stl-my-fav">STL (My Fav)</a></li>
-<li><a href="#seats--x11-methods">Seats & X11 methods</a>
-<ul>
-<li><a href="#x11">X11</a></li>
-<li><a href="#seats">SEATS</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+
 
 
   </div>
