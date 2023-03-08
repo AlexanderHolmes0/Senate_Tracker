@@ -141,7 +141,7 @@ It’s a pretty great method.</p>
 </blockquote>
 <hr>
 <p>Play around and test all different stuff!<br>
-This is <em><strong>YOUR</strong></em> playground for discovering stock patterns 🚀 or politician ‘shadiness’ <font color="red">!! </font></p>
+This is <em><strong>YOUR</strong></em> playground for discovering stock patterns 🚀 or politician ‘shadiness’ <font color="red">‼️</font> </p>
 
 
     
