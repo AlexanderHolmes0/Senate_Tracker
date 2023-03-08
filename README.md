@@ -123,8 +123,7 @@ This is <em><strong>YOUR</strong></em> playground for discovering stock patterns
 
     
 <div style="text-align: center;">
-<IMG SRC="www/giphy.gif">
-</div> 
+<img SRC="www/giphy.gif">
 </body>
 
 </html>
