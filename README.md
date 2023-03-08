@@ -1,4 +1,3 @@
-# [Senate_Tracker](https://aholmes23.shinyapps.io/SenateTracker/)
 <!DOCTYPE html>
 <html>
 
@@ -9,14 +8,12 @@
   <link rel="stylesheet" href="https://stackedit.io/style.css" />
 </head>
 
-      
-
-
-
+     
   </div>
   <div class="stackedit__right">
     <div class="stackedit__html">
-      <h1 id="bulb-user-guide">💡 User Guide</h1>
+      <h1 id="bulb-user-guide">💡 Senate_Tracker User Guide</h1>
+      
 <h2 id="first-things-first">First Things First</h2>
 <p>This guide is designed to bring <em><strong>YOU</strong></em> up to speed on what this app is all about.<br>
 First, I would like to thank you for your interest in this project 😊</p>
