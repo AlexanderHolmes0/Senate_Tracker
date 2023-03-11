@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
@@ -104,21 +104,21 @@ There are 5️⃣ options to choose when performing decomposition on a time seri
 Classical contains both additive and multiplicative types. Seasonality does not change which is usually not a good thing.</p>
 <h3 id="additive">Additive</h3>
 <p>Concerned about <em>adding</em> up the different components.</p>
-<p>Trend<sup>i</sup> ➕ Seasonality<sup>i</sup> ➕ Random <strong>=</strong> Y<sup>i</sup></p>
+<p>Y<sub>t</sub> <strong>=</strong> Trend<sub>t</sub> ➕ Seasonality<sub>t</sub>  ➕ Random<sub>t</sub></p>
 <blockquote>
 <ul>
 <li>Use Additive when the trend is mostly going one direction and seasonal variance is minimal</li>
-<li>Expressed in ‘things’ above the trend i.e. ‘We are $400 above the trend’</li>
+<li>Expressed in ‘<code>things</code>’ above the trend i.e. ‘We are $400 above the trend’</li>
 </ul>
 </blockquote>
 <hr>
 <h3 id="multiplicative">Multiplicative</h3>
 <p>Concerned about <em>multiplying</em> the different components together.</p>
-<p>Trend<sup>i</sup> ✖️ Seasonality<sup>i</sup> ✖️ Random<sup>i</sup> <strong>=</strong> Y<sup>i</sup></p>
+<p>Y<sub>t</sub> <strong>=</strong> Trend<sub>t</sub>  ✖️ Seasonality<sub>t</sub>  ✖️ Random<sub>t</sub></p>
 <blockquote>
 <ul>
-<li>Use Multiplicative when the trend is parabolic or the seasonal variation is getting ‘cone’ shaped.</li>
-<li>Expressed in percentages above the trend (middle is 0%)</li>
+<li>Use Multiplication when the trend is parabolic or the seasonal variation is getting ‘cone’ shaped.</li>
+<li>Expressed in percentages above the trend (middle is 0% but shown as <code>1</code>)</li>
 </ul>
 </blockquote>
 <hr>
@@ -139,7 +139,7 @@ Uses additive but multiplicative can be obtained through transformations of data
 Many extra steps involved we won’t dive into here but know its awesome.</p>
 <h4 id="seats">SEATS</h4>
 <p>(<em>Seasonal Extraction in ARIMA Time Series</em>) was developed by the Bank of Spain. Seasonality is also allowed to change here as well.<br>
-It’s a pretty great method.</p>
+It’s a pretty great method as well.</p>
 <blockquote>
 <p>Learn just how these methods do it <a href="https://www2.census.gov/software/x-13arima-seats/x-13-data/documentation/docx13as.pdf"><code>X-13ARIMA-SEATS Manual</code></a></p>
 </blockquote>
