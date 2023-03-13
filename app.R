@@ -384,7 +384,7 @@ server <- function(input, output, session) {
 
   models <- reactive({
     if(!is.null(stock())){
-    if (input$model == "X11" & nrow(stock()) >= 36) {
+    if (input$model == "X11" & nrow(stock()) >= 60) {
       stock() %>%
         model(X_13ARIMA_SEATS(!!sym(input$column) ~ x11())) %>%
         components()
@@ -405,7 +405,7 @@ server <- function(input, output, session) {
         model(classical_decomposition(!!sym(input$column), type = "additive")) %>%
         components()
     } else {
-      shinyCatch(position = "top-right", message("This stonk is too young! (Less than 36 months old)"))
+      shinyCatch(position = "top-right", message("This stonk is too young! (Move the date range further out to >=60 weeks)"))
 
     }}else { NULL}
   })
