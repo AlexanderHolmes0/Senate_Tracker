@@ -74,7 +74,7 @@ sidebar <- dashboardSidebar(
       icon = icon("user"), tabName = "user",
       badgeLabel = "README", badgeColor = "light-blue"
     ),
-    menuItem("Ex. Interpretations",
+    menuItem("Interpretation Example",
              icon = icon("pen"), tabName = "interpret",
              badgeLabel = "NEW", badgeColor = "green"
     ),
@@ -100,7 +100,7 @@ sidebar <- dashboardSidebar(
       multiple = TRUE
     ),
     dateRangeInput("dates",
-      label = "Date range",
+      label = "Date Range",
       start = "2019-01-01", end = Sys.Date()
     ),
     selectizeInput("model",
@@ -113,10 +113,11 @@ sidebar <- dashboardSidebar(
 )
 
 body <- dashboardBody(
-  autoWaiter(color = "#d81b60" ,id=c("series","season","ggseason","autoq","autolag","decompq",
+  autoWaiter(color = "#0066B6" ,id=c("series","season","ggseason","autoq","autolag","decompq",
                   "interp_series","interp_season","interp_ggseason",
                   "interp_autoq","interp_decompq"),
              fadeout = TRUE), 
+  
              #html = img(src = "giphy.gif", align = "center", height = "200px", width = "200px")),
   use_theme(mytheme),
   tabItems(
@@ -124,26 +125,31 @@ body <- dashboardBody(
       tabName = "dashboard",
       h2("Stock Information"),
       fluidRow(
-        box(title = textOutput("title"), background = "maroon", plotlyOutput("series", height = 490), width = 7),
+        box(title = textOutput("title"), background = "light-blue", plotlyOutput("series", height =490), width = 7),
         setShadow(id = "series"),
-        box(title = "Stock Quotes", DTOutput("stonk"), width = 5),
-        setShadow(id = "stonk")
-      ),
+        tabBox(tabPanel("Stonk Quotes", DTOutput("stonk"), icon=icon("table")),
+               tabPanel("Seasonality", plotlyOutput("season1"), icon = icon("leaf")),
+               tabPanel("Autocorrelation", plotlyOutput("autoq1"), icon = icon("signal")),
+               tabPanel("Decomposition", plotlyOutput("decompq1"), icon=icon("trash")),width = 5),
+        setShadow(id = "stonk"),
+        setShadow(id = "season1"),
+        setShadow(id = "autoq1"),
+        setShadow(id = "decompq1")),
       fluidRow(box(title = "Senator Trades", DTOutput("sentable"), width = 12)),
       setShadow(id = "sentable")
     ),
     tabItem(
       tabName = "seasonality",
       h2("Seasonality"),
-      box(title = textOutput("seas"), background = "maroon", plotlyOutput("season")),
+      box(title = textOutput("seas"), background = "light-blue",plotlyOutput("season")),
       setShadow(id = "season"),
-      box(title = textOutput("seeass"), background = "maroon", plotlyOutput("ggseason")),
+      box(title = textOutput("seeass"), background = "light-blue", plotlyOutput("ggseason")),
       setShadow(id = "ggseason")
     ),
     tabItem(
       tabName = "auto",
       h2("Autocorrelation"),
-      box(title = textOutput("autoo"), background = "maroon",plotlyOutput("autoq"),hr(), plotlyOutput("autolag") ,width = 8),
+      box(title = textOutput("autoo"), background = "light-blue",plotlyOutput("autoq"),hr(), plotlyOutput("autolag") ,width = 8),
       setShadow(id = "autoq"),
       setShadow(id = "autolag"),
       box(title = "Maximum Lag", sliderInput("lags", "Lag Max Value", value = 12, min = 1, max = 100,
@@ -152,14 +158,14 @@ body <- dashboardBody(
     tabItem(
       tabName = "decomp",
       h2("Decomposition"),
-      box(title = textOutput("decompi"), background = "maroon", plotlyOutput("decompq"), width = 8),
+      box(title = textOutput("decompi"), background = "light-blue", plotlyOutput("decompq"), width = 8),
       setShadow(id = "decompq")
     ),
     tabItem(
       tabName = "user",
       fluidPage(
       h2(id='userss', "WELCOME: Stonks with Math"),
-      htmltools::tags$iframe(src = "Guide.html", width = '100%',height=3750,  style = "border:none;")),
+      htmltools::tags$iframe(src = "Guide.html", width = '100%',height=4100,  style = "border:none;")),
          animateUI('userss',animation = 'float')
     )
     
@@ -169,11 +175,11 @@ body <- dashboardBody(
       tabName = "interpret",
       h2(id='tittle',"EXAMPLE: Interpretation of Plots (Sry Plots Locked)"),
       animateUI('tittle',animation = 'float'),
-      fluidRow(box(id='box1',title = "Series: Alcoa Corporation Common Stock" ,plotlyOutput("interp_series"),hr(), box(title = "Interpretation",textOutput('words_series'),background = "light-blue", width=12), background = "maroon"),
-               box(id='box2',title = "Seasonality: Alcoa Corporation Common Stock" ,plotlyOutput("interp_season"),hr(), box(title = "Interpretation",textOutput('words_seasonal'),background = "light-blue", width=12),background = "maroon")),
-      fluidRow(box(id='box3',title = "Seasonaltiy: Alcoa Corporation Common Stock" ,plotlyOutput("interp_ggseason"),hr(), box(title = "Interpretation",textOutput('words_ggseason'),background = "light-blue", width=12),background = "maroon"),
-               box(id='box4',title = "Autocorrelation: Alcoa Corporation Common Stock" ,plotlyOutput("interp_autoq"),hr(), box(title = "Interpretation",textOutput('words_autoq'),background = "light-blue", width=12),background = "maroon"),
-               box(id='box5',title = "Decomposition: Alcoa Corporation Common Stock" ,plotlyOutput("interp_decompq"),hr(), box(title = "Interpretation",textOutput('words_decompq'),background = "light-blue", width=12),background = "maroon")),
+      fluidRow(box(id='box1',title = "Series: Alcoa Corporation Common Stock" ,plotlyOutput("interp_series"),hr(), box(title = "Interpretation",textOutput('words_series'),background = "blue", width=12), background = "light-blue"),
+               box(id='box2',title = "Seasonality: Alcoa Corporation Common Stock" ,plotlyOutput("interp_season"),hr(), box(title = "Interpretation",textOutput('words_seasonal'),background = "blue", width=12),background = "light-blue")),
+      fluidRow(box(id='box3',title = "Seasonaltiy: Alcoa Corporation Common Stock" ,plotlyOutput("interp_ggseason"),hr(), box(title = "Interpretation",textOutput('words_ggseason'),background = "blue", width=12),background = "light-blue"),
+               box(id='box4',title = "Autocorrelation: Alcoa Corporation Common Stock" ,plotlyOutput("interp_autoq"),hr(), box(title = "Interpretation",textOutput('words_autoq'),background = "blue", width=12),background = "light-blue"),
+               box(id='box5',title = "Decomposition: Alcoa Corporation Common Stock" ,plotlyOutput("interp_decompq"),hr(), box(title = "Interpretation",textOutput('words_decompq'), width=12, background = "blue"),background = "light-blue")),
       setShadow(id ="box1"),
       setShadow(id ="box2"),
       setShadow(id ="box3"),
@@ -246,7 +252,8 @@ server <- function(input, output, session) {
           "May 2008 and March 2022 both show up as pretty big outliers",
           "the selected model can not account for with trend and seasonal components.",
           "Trend is also seen for the first time here which is just a moving average of the series.",
-          "Alcoa stock had a pretty wavy trend with some major drops aligning with the highlighted dates above.")
+          "Alcoa stock had a pretty wavy trend with some major drops aligning with the highlighted dates above. 
+           The selected decomposition method has a robust method of dealing with outliers so that they do not impact the trend very much.")
   })
   output$interp_autoq <- renderPlotly({
         interp %>%
@@ -255,7 +262,7 @@ server <- function(input, output, session) {
   })
   output$words_autoq <- renderText({
     paste("Since trend is pretty important to this series, we see a downward slide.",
-          "We see a reversal in the slide to show more and more positive correlation values.",
+          "At 24 months, we see a reversal in the slide to show more and more positive correlation values.",
           "This makes sense because the values are somewhat closer together when lagged beyond 24 months.",
           "The graphic depicts the correlation of the series with the lagged series for certain months.",
           "*'ACF' is the correlation factor with the lagged series.*"
@@ -316,7 +323,7 @@ server <- function(input, output, session) {
 
   stock <- reactive({
     if (any(input$asset %in% senate()$Ticker) & input$asset != "" ) {
-      tq_get(input$asset, get = "stock.prices" , from=input$dates[1],complete_cases = TRUE) %>% # add something with date ranges to capture the trades
+      tq_get(input$asset, get = "stock.prices" , from=input$dates[1], to=input$dates[2], complete_cases = TRUE) %>% # add something with date ranges to capture the trades
         tq_transmute(mutate_fun = to.monthly, indexAt = "lastof") %>%
         mutate(
           date = yearmonth(date),
@@ -324,7 +331,7 @@ server <- function(input, output, session) {
         ) %>%
         as_tsibble(index = date)
     } else if(input$asset != ""){
-      tq_get(input$asset, get = "stock.prices", complete_cases = TRUE) %>% # add something with date ranges to capture the trades
+      tq_get(input$asset, get = "stock.prices",from=input$dates[1], to=input$dates[2], complete_cases = TRUE) %>% # add something with date ranges to capture the trades
         tq_transmute(mutate_fun = to.monthly, indexAt = "lastof") %>%
         mutate(
           date = yearmonth(date),
@@ -412,7 +419,16 @@ server <- function(input, output, session) {
     }}
     
   })
-
+  
+  output$season1 <- renderPlotly({
+    if(!is.null(models())){
+      if (input$model == "STL") {
+        autoplot(models(), season_year)
+      } else{
+        autoplot(models(), seasonal)
+      }}
+    
+  })
   output$ggseason <- renderPlotly({
     if(!is.null(models())){
       if (input$model == "STL") {
@@ -434,6 +450,17 @@ server <- function(input, output, session) {
     }}
   })
   
+  output$autoq1 <- renderPlotly({
+    if(!is.null(models())){
+      if (nrow(stock()) > 1) {
+        stock() %>%
+          ACF(!!sym(input$column)) %>%
+          autoplot()
+      } else {
+        shinyCatch(position = "top-right", message("Not enuff time!"))
+      }}
+  })
+  
   output$autolag <- renderPlotly({
     if(!is.null(models())){
       if (nrow(stock()) > 1) {
@@ -452,6 +479,12 @@ server <- function(input, output, session) {
   })
   
   output$decompq <- renderPlotly({
+    if( !is.null(models())){
+      autoplot(models())
+    }
+  })
+  
+  output$decompq1 <- renderPlotly({
     if( !is.null(models())){
       autoplot(models())
     }
