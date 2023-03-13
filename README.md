@@ -1,32 +1,65 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <title>Guide</title>
   <link rel="stylesheet" href="https://stackedit.io/style.css" />
 </head>
 
-     
+<body class="stackedit">
+  <div class="stackedit__left">
+    <div class="stackedit__toc">
+      
+<ul>
+<li><a href="#bulb-user-guide">💡 User Guide</a>
+<ul>
+<li><a href="#first-things-first">First Things First</a></li>
+<li><a href="#maths-stuff-books">Maths Stuff 📚</a>
+<ul>
+<li><a href="#seasonality">Seasonality</a></li>
+<li><a href="#autocorrelation">Autocorrelation</a></li>
+<li><a href="#decomposition">Decomposition</a></li>
+<li><a href="#additive">Additive</a></li>
+<li><a href="#multiplicative">Multiplicative</a></li>
+<li><a href="#stl-my-fav">STL (My Fav)</a></li>
+<li><a href="#seats--x11-methods">Seats & X11 methods</a>
+<ul>
+<li><a href="#x11">X11</a></li>
+<li><a href="#seats-subfeature-in-developmentsub">SEATS (Feature In Development)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+    </div>
   </div>
   <div class="stackedit__right">
     <div class="stackedit__html">
-      <h1 id="bulb-user-guide">💡 Senate_Tracker User Guide</h1>
-      
+      <h1 id="bulb-user-guide">💡 User Guide</h1>
 <h2 id="first-things-first">First Things First</h2>
 <p>This guide is designed to bring <em><strong>YOU</strong></em> up to speed on what this app is all about.<br>
 First, I would like to thank you for your interest in this project 😊</p>
-<p>To get started exploring stock trades and when politicians bought/sold them, click on the side bar menu and find <strong>‘Home’</strong> (🏠)</p>
-<p>From this page you can explore any of the <em><strong>8,000+</strong></em> available stocks to choose from but <em><strong>not</strong></em> all will have senate trades.<br>
-The table to the right of the time series plot are monthly stock quotes for your selected stock. This updates daily <font color="red">‼️</font><br>
-The table below the plot features ANY trades that senators have made and discolsed. (A neato pop-up will inform if no senators have traded the selected stonk)<br>
-The sidebar also houses a variable selection. Pick from any to see it within the plot.</p>
-<p>Red 🔴/Green🟢/Orange🟠/Blue🔵 lines appear on the plot indicating the <code>Type</code> of transaction the senator did and when they did.</p>
+<p>To get started exploring stock trades and when politicians bought/sold them, click on the side bar menu and find <strong>‘Home’</strong> (🏠).<br>
+For a <em>quick</em> exploration, click the different tabs on the stock quotes box to the right of the stock series. The icons align with the side bar menu on the left hand side of the page to allow for deeper exploration.</p>
+<p>From this page you can explore any of the <em><strong>8,000+</strong></em> available stocks to choose from but <em><strong>not</strong></em> all will have senate trades. This is done with the sidebar dropdown called <em><strong>Stock Name</strong></em>.</p>
+<p>The table to the right of the time series plot are monthly stock quotes for your selected stock. This box can also show 3 different plots (‘Seasonality’🍃, ‘Autocorrelation’ 📊, ‘Decomposition’ 🗑️)</p>
+<p>This app updates daily except for interpretation examples<font color="red">‼️</font></p>
+<p>The table below the plot features ANY trades that senators have made and disclosed. (A neato pop-up will inform you if no senators have traded the selected stonk)<br>
+The sidebar also houses a variable selection called <em><strong>Plotted Variable</strong></em>. Pick from any to see it within the plot.</p>
+<p>Red 🔴/Green🟢/Orange🟠/Blue🔵 lines appear on the plot indicating the <code>Type</code> of transaction the senator did and when they did.<br>
+In addition to the already discussed functionality, there are two other input choices you can make.</p>
+<p><em><strong>Transaction Type</strong></em> filters the senate data to only include certain transactions like only<br>
+<code>'Sale (Full)'</code> transactions. Pick and choose from the dropdown options.</p>
+<p><em><strong>Date Range</strong></em> filters the stock data to only include certain dates. This partition of stock data is used globally on every tab and will stay this way until <em><strong>Transaction Type</strong></em> dropdown is changed or the <em><strong>Stock Name</strong></em> is changed.</p>
 <p>Let’s keep it goin!<br>
-So what about maths with stonks🚀 That’s why I’m here!<br>
-Alright alright<br>
-<sub>I was getting to it</sub></p>
+So what about maths with stonks 🚀 That’s why I’m here!<br>
+Alright alright</p>
+<p><sub>I was getting to it</sub></p>
 <h2 id="maths-stuff-books">Maths Stuff 📚</h2>
 <h3 id="seasonality">Seasonality</h3>
 <p>Click on the ‘Seasonality’ (🍃) tab to see the seasonality of the selected stock. The plot next to it will be the yearly breakdown by color of the seasonality patterns📈.<br>
@@ -43,7 +76,7 @@ What is that you ask?<br>
 Correlation with lags and <em><strong>YOU</strong></em> get to choose how much lag is present (plus animations)<br>
 woo hoo!🎉</p>
 <blockquote>
-<p>Lag is just how far we are pushing earlier observations down and seeing how they correlate with those values.</p>
+<p>Lag is just how far we are pushing earlier observations down and seeing how they correlate with those later values.</p>
 </blockquote>
 <p><em>Table example:</em></p>
 
@@ -73,25 +106,25 @@ That’s Autocorrelation! ‘Correlation with lags’</p>
 <hr>
 <h3 id="decomposition">Decomposition</h3>
 <p>Decomposition (🗑️) tab is all about breaking down a series into different parts.<br>
-There are 5️⃣ options to choose when performing decomposition on a time series.<br>
+There are 5️⃣ options to choose from when performing decomposition on a time series.<br>
 Classical contains both additive and multiplicative types. Seasonality does not change which is usually not a good thing.</p>
 <h3 id="additive">Additive</h3>
 <p>Concerned about <em>adding</em> up the different components.</p>
-<p>Trend<sup>i</sup> ➕ Seasonality<sup>i</sup> ➕ Random <strong>=</strong> Y<sup>i</sup></p>
+<p>Y<sub>t</sub> <strong>=</strong> Trend<sub>t</sub> ➕ Seasonality<sub>t</sub>  ➕ Random<sub>t</sub></p>
 <blockquote>
 <ul>
-<li>Use Additive when the trend is mostly going one direction and seasonal variance is minimal</li>
-<li>Expressed in ‘things’ above the trend i.e. ‘We are $400 above the trend’</li>
+<li>Use Additive when the trend is mostly going one direction and seasonal variation (differences) is minimal</li>
+<li>Expressed in ‘<code>things</code>’ above the trend i.e. ‘We are $400 above the trend’</li>
 </ul>
 </blockquote>
 <hr>
 <h3 id="multiplicative">Multiplicative</h3>
 <p>Concerned about <em>multiplying</em> the different components together.</p>
-<p>Trend<sup>i</sup> ✖️ Seasonality<sup>i</sup> ✖️ Random<sup>i</sup> <strong>=</strong> Y<sup>i</sup></p>
+<p>Y<sub>t</sub> <strong>=</strong> Trend<sub>t</sub>  ✖️ Seasonality<sub>t</sub>  ✖️ Random<sub>t</sub></p>
 <blockquote>
 <ul>
-<li>Use Multiplicative when the trend is parabolic or the seasonal variation is getting ‘cone’ shaped.</li>
-<li>Expressed in percentages above the trend (middle is 0%)</li>
+<li>Use Multiplication when the trend is parabolic or the seasonal variation is getting ‘cone’ shaped.</li>
+<li>Expressed in percentages above the trend (middle is 0% but shown as <code>1</code>)</li>
 </ul>
 </blockquote>
 <hr>
@@ -110,15 +143,22 @@ Uses additive but multiplicative can be obtained through transformations of data
 <p>Developed by the US Census Bureau for better forecasting and evaluation of census data. It only allows for monthly and quarterly data. 😔</p>
 <p>Classical decomp but on steroids! Seasonality allowed to change.<br>
 Many extra steps involved we won’t dive into here but know its awesome.</p>
-<h4 id="seats">SEATS</h4>
-<p>(<em>Seasonal Extraction in ARIMA Time Series</em>) was developed by the Bank of Spain. Seasonality is also allowed to change here as well.<br>
-It’s a pretty great method.</p>
+<h4 id="seats-subfeature-in-developmentsub">SEATS <sub>(Feature In Development)</sub></h4>
+<p>(<em>Seasonal Extraction in ARIMA Time Series</em>) was developed by the Bank of Spain. Seasonality is also allowed to change here.<br>
+It’s a pretty great method as well.</p>
 <blockquote>
 <p>Learn just how these methods do it <a href="https://www2.census.gov/software/x-13arima-seats/x-13-data/documentation/docx13as.pdf"><code>X-13ARIMA-SEATS Manual</code></a></p>
 </blockquote>
 <hr>
 <p>Play around and test all different stuff!<br>
-This is <em><strong>YOUR</strong></em> playground for discovering stock patterns 🚀 or politician ‘shadiness’ <font color="red">‼️</font> </p>
+This is <em><strong>YOUR</strong></em> playground for discovering stock patterns 🚀 or politician ‘shadiness’ <font color="red">‼️</font></p>
+<p><em>Head on over to interpretation examples 🖊 to see more tips!</em></p>
+
+    </div>
+  </div>
+</body>
+
+</html>
 
 
     
