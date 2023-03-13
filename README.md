@@ -118,8 +118,8 @@ It’s a pretty great method as well.</p>
 This is <em><strong>YOUR</strong></em> playground for discovering stock patterns 🚀 or politician ‘shadiness’ <font color="red">‼️</font></p>
 <p><em>Head on over to interpretation examples 🖊 to see more tips!</em></p>
 
-    </div>
-  </div>
+    
+
 </body>
 
 </html>
