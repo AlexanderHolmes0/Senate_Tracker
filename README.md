@@ -1,43 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Guide</title>
-  <link rel="stylesheet" href="https://stackedit.io/style.css" />
-</head>
 
-<body class="stackedit">
-  <div class="stackedit__left">
-    <div class="stackedit__toc">
-      
-<ul>
-<li><a href="#bulb-user-guide">💡 User Guide</a>
-<ul>
-<li><a href="#first-things-first">First Things First</a></li>
-<li><a href="#maths-stuff-books">Maths Stuff 📚</a>
-<ul>
-<li><a href="#seasonality">Seasonality</a></li>
-<li><a href="#autocorrelation">Autocorrelation</a></li>
-<li><a href="#decomposition">Decomposition</a></li>
-<li><a href="#additive">Additive</a></li>
-<li><a href="#multiplicative">Multiplicative</a></li>
-<li><a href="#stl-my-fav">STL (My Fav)</a></li>
-<li><a href="#seats--x11-methods">Seats & X11 methods</a>
-<ul>
-<li><a href="#x11">X11</a></li>
-<li><a href="#seats-subfeature-in-developmentsub">SEATS (Feature In Development)</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-    </div>
-  </div>
   <div class="stackedit__right">
     <div class="stackedit__html">
       <h1 id="bulb-user-guide">💡 User Guide</h1>
