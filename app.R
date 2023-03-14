@@ -232,12 +232,12 @@ server <- function(input, output, session) {
     
   })
   output$words_series <- renderText({
-    paste("This series exhibits some irregular trend and seasonal behaviors.",
-          "It also exhibits a seasonality decrease with drastic changes throughout the years.",
-          "Pretty huge drop during the 2008-2009 financial crisis.",
-          "In recent history, there has been a huge increase in Aloca stock price due to the Russia-Ukraine war.",
-          "The different colors of vertical lines indicate where a senator bought or sold Alcoa stock."
-          )
+    paste("This series exhibits some irregular trends and seasonal behaviors.
+          It also shows a decrease in seasonality with drastic changes over time. 
+          A pretty huge drop was seen during the 2008–2009 financial crisis. 
+          In recent history, there has been a huge increase in Alcoa's stock price due to the Russia-Ukraine war. 
+          The different colors of vertical lines indicate where a senator bought or sold Alcoa stock."
+      )
   })
   output$interp_decompq <- renderPlotly({
     interp %>%
@@ -247,13 +247,12 @@ server <- function(input, output, session) {
     
   })
   output$words_decompq <- renderText({
-    paste("This plot displays all the above in one plot for easy viewing.",
-          "Contains two additional interesting plot (trend and remainder).",
-          "May 2008 and March 2022 both show up as pretty big outliers",
-          "the selected model can not account for with trend and seasonal components.",
-          "Trend is also seen for the first time here which is just a moving average of the series.",
-          "Alcoa stock had a pretty wavy trend with some major drops/increases aligning with the highlighted dates above. 
-           The selected decomposition method has a 'robust' method of dealing with outliers so that they do not impact the trend very much.")
+    paste("This plot combines all of the above into a single, easy-to-read view. 
+          The view includes two more charts, titled trend and remainder. 
+          Both May 2008 and March 2022 are significant outliers that the chosen model cannot account for. 
+          For the first time, a trend is visible here, which is the moving average of the series. 
+          Alcoa's stock had a choppy trend, with some significant drops and increases coinciding with the highlighted dates above. 
+          The chosen decomposition method has a 'robust' way of dealing with outliers, so they have little impact on the trend.")
   })
   output$interp_autoq <- renderPlotly({
         interp %>%
@@ -261,11 +260,11 @@ server <- function(input, output, session) {
           autoplot()
   })
   output$words_autoq <- renderText({
-    paste("Since trend is pretty important to this series, we see a downward slide.",
-          "At 24 months, we see a reversal in the slide to show more and more positive correlation (how similiar the series are) values.",
-          "This makes sense because the values are somewhat closer together when lagged beyond 24 months.",
-          "The graphic depicts the correlation of the series with the lagged series for certain months.",
-          "*'ACF' is the correlation factor with the lagged series.*"
+    paste("Since the trend is crucial to this series, we see a downward slide. 
+          At 24 months, we see a reversal in the pattern to show more and more positive correlation (how similar the series are) values. 
+          It makes sense because the values are somewhat closer together when lagged beyond 24 months. 
+          The graphic depicts the correlation of the series with the lag series at different intervals. 
+          'ACF' is the correlation factor for the lagged series with the regular series."
           )
   })
   output$interp_season <- renderPlotly({
@@ -275,11 +274,10 @@ server <- function(input, output, session) {
         autoplot(season_year)
   })
   output$words_seasonal <- renderText({
-    paste("Due to how crazy this plot is, there is a consistent drop in seasonality.",
-          "Seasonal variance during September was at all time lows during the 2014-2015 era.",
-          "Seasonality began increasing after that period.",
-          "There's a decreasing 'cone' like shape for the seasonality for this time series.",
-          "After January 2015, there has been a slight increase in seasonality but none as big as previously seen.")
+    paste("Due to how crazy this plot is, there is a consistent drop in seasonality. 
+          Seasonal differences were at all-time lows during the 2014–2015 era. 
+          Seasonality began increasing after that period. There's a decreasing 'cone'-like shape for the seasonality of this time series. 
+          After January 2015, a slight increase in seasonality has emerged, but none as big as previously seen.")
   })
   output$interp_ggseason <- renderPlotly({
     interp %>%
@@ -288,10 +286,10 @@ server <- function(input, output, session) {
       gg_season(season_year)
   })
   output$words_ggseason <- renderText({
-    paste("This plot identifies the massive changes in seasonality by the year.",
-          "The cyclical nature of the aluminum industry is exhibited well here.",
-          "September in recent years has become less of a month of decline for Alcoa common stock.",
-          "Seasonality overall has become less variant in nature and stays relatively close to the trend.")
+    paste("This plot identifies the massive changes in seasonality throughout the year. 
+          The cyclical nature of the aluminum industry is exhibited here. 
+          September in recent years has become less of a month of decline for Alcoa's common stock. 
+          Overall, seasonality has become less variant and stays relatively close to the trend.")
   })
   
   
