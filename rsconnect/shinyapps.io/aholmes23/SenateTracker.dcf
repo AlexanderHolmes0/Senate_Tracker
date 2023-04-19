@@ -5,10 +5,9 @@ account: aholmes23
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 8868469
-bundleId: 7097230
+bundleId: 7107195
 url: https://aholmes23.shinyapps.io/SenateTracker/
-when: 1681692546.87363
-lastSyncTime: 1681692546.87364
+when: 1681865542.17796
+lastSyncTime: 1681865542.17797
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: MidtermAppFinal-Holmes.zip

@@ -40,6 +40,8 @@ interp_senate <- Senator %>%
 sidebar <- dashboardSidebar(
   tags$head(
     tags$link(rel = "shortcut icon", href = "dollar.ico"),
+    tags$style(".fa-linkedin {color:#FFFFFF}"),
+    tags$style(".fa-github {color:#FFFFFF}"),
     HTML('<!-- Primary Meta Tags -->
               <title>Senate Stock Tracker</title>
               <meta name="title" content="Senate Tracker">
@@ -50,14 +52,14 @@ sidebar <- dashboardSidebar(
               <meta property="og:url" content="https://aholmes23.shinyapps.io/Senate_Tracker/">
               <meta property="og:title" content="Senate Stock Tracker">
               <meta property="og:description" content="Dive into the stock trades of elected officials! Can you find anything sus?">
-              <meta property="og:image" content="https://i.imgur.com/Uq04iXx.jpeg">
+              <meta property="og:image" content="https://i.imgur.com/qCGIHE8.png">
 
               <!-- Twitter -->
               <meta property="twitter:card" content="summary_large_image">
               <meta property="twitter:url" content="https://aholmes23.shinyapps.io/Senate_Tracker/">
               <meta property="twitter:title" content="Senate Stock Tracker">
               <meta property="twitter:description" content="Dive into the stock trades of our elected officials! Can you find anything sus?">
-              <meta property="twitter:image" content="https://i.imgur.com/Uq04iXx.jpeg">')
+              <meta property="twitter:image" content="https://i.imgur.com/qCGIHE8.png">')
   ),
   minified = FALSE,
   sidebarMenu(
@@ -80,26 +82,18 @@ sidebar <- dashboardSidebar(
       icon = icon("pen"), tabName = "interpret"
     ),
     menuItem("Forecast",
-      icon = icon("line-chart"), tabName = "forecast",
-      badgeColor = 'green',badgeLabel = 'NEW'
-    ),
-    conditionalPanel(
-      'input.sidebar=="forecast"',
-      checkboxInput("fore", "Forecast?", value = F),
+      icon = icon("line-chart"),
       numericInputIcon(
-        inputId = "horizon", "Forecast Horizon", min = 1, value = 10, step = 1,
-        icon = list(icon("calendar"),"Months"),width = "200px"
-      ),
-      selectizeInput("typefore",
-        "Forecast Model:",
-        selected = "Snaive",
-        choices = c("Snaive", "Naive", "Drift", "Mean", "TSLM", "Exponential Smoothing" = "SES", "Arima")
-      )
+             inputId = "horizon", "Forecast Horizon", min = 1, value = 10, step = 1,
+             icon = list(icon("calendar"),"Months"),width = "200px"
+           ),
+         selectizeInput("typefore",
+          "Forecast Model:",
+           selected = "Snaive",
+          choices = c("Snaive", "Naive", "Drift", "Mean", "TSLM", "Exponential Smoothing" = "SES", "Arima")
+         )
     ),
-    menuItem("Github",
-      icon = icon("github"),
-      href = "https://github.com/AlexanderHolmes0/Senate_Tracker"
-    ),
+    
     selectizeInput("asset",
       "Stock Name:",
       choices = Valid_ticks$Symbol,
@@ -223,13 +217,41 @@ body <- dashboardBody(
 # Put them together into a dashboardPage
 ui <- shinydashboardPlus::dashboardPage(
   title = "Stonks with Math",
-  dashboardHeader(title = "Stonks with Math"),
+  dashboardHeader(title = "Stonks with Math", userOutput('user')),
   sidebar,
   body,
   controlbar = dashboardControlbar(collapsed = TRUE, skinSelector())
 )
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
+  
+  output$user <- renderUser({
+    dashboardUser(
+      name = "Alexander Holmes", 
+      image = "https://avatars.githubusercontent.com/u/108624793?v=4", 
+      title = "Senate Tracker",
+      subtitle = "Creator", 
+      fluidRow(
+        dashboardUserItem(
+          width = 6,
+          socialButton(
+            href = "https://www.linkedin.com/in/aholmes0/",
+            icon = icon("linkedin",)
+          )
+        ),
+        dashboardUserItem(
+          width = 6,
+          socialButton(
+            href = "https://github.com/AlexanderHolmes0",
+            icon = icon("github")
+          )
+        )
+      )
+    )
+  })
+  
+  
+  
   output$title <- renderText({
     paste0("Stock Series: ", Valid_ticks[which(Valid_ticks$Symbol == input$asset), 2])
   })
@@ -335,6 +357,8 @@ server <- function(input, output, session) {
           where the stock currently stands, it lends itself to having good performance without complexity.")
   })
 
+  
+  
   senate <- reactive({
     if (any(input$asset %in% Senator$Ticker) & !is.null(input$type)) {
       senate <- Senator %>%
@@ -413,7 +437,7 @@ server <- function(input, output, session) {
         theme(text = element_text(size = 20))+
         guides(color=guide_legend(title.hjust=0.5))
       
-    } else if (input$fore == F & !is.null(senate()) & !is.null(stock())) {
+    } else if (is.null(input$sidebarItemExpanded) & !is.null(senate()) & !is.null(stock())) {
       series <- autoplot(stock(), !!sym(input$column)) +
         labs(y = paste0(input$asset, " ", input$column),x="Date")
 
@@ -424,7 +448,7 @@ server <- function(input, output, session) {
         theme(text = element_text(size = 20))+
           guides(color=guide_legend(title.hjust=0.5))
         
-    } else if (input$fore == T & !is.null(senate()) & !is.null(stock())) {
+    } else if (input$sidebarItemExpanded == "Forecast" & !is.null(senate()) & !is.null(stock())) {
       
         forecastModels() %>%
         autoplot(stock(), level = NULL) +
@@ -439,40 +463,48 @@ server <- function(input, output, session) {
   })
 
   forecastModels <- reactive({
-    if (!is.null(stock()) & input$fore == T) {
+    if (!is.null(stock()) & input$sidebarItemExpanded == "Forecast") {
       if (input$typefore == "Snaive") {
         stock() %>%
           model(SNAIVE(!!sym(input$column))) %>%
           forecast(h = input$horizon)
+        
       } else if (input$typefore == "Naive") {
         stock() %>%
           model(NAIVE(!!sym(input$column))) %>%
           forecast(h = input$horizon)
+        
       } else if (input$typefore == "Mean") {
         stock() %>%
           model(MEAN(!!sym(input$column))) %>%
           forecast(h = input$horizon)
+        
       } else if (input$typefore == "Drift") {
         stock() %>%
           model(NAIVE(!!sym(input$column) ~ drift())) %>%
           forecast(h = input$horizon)
+        
       } else if (input$typefore == "TSLM") {
         stock() %>%
           model(TSLM(!!sym(input$column) ~ trend() + season())) %>%
           forecast(h = input$horizon)
+        
       } else if (input$typefore == "SES") {
         stock() %>%
           model(ETS(!!sym(input$column))) %>%
           forecast(h = input$horizon)
+        
       } else if (input$typefore == "Arima") {
         stock() %>%
-          model(TSLM(!!sym(input$column) ~ trend() + season())) %>%
+          model(ARIMA(!!sym(input$column))) %>%
           forecast(h = input$horizon)
+        
       } else {
-        shinyCatch(position = "top-right", message("This stonk is too young! (Move the date range further out to >=60 weeks)"))
+        shinyCatch(position = "top-right", 
+        message("This stonk is too young! (Move the date range further out to >=60 weeks)"))
       }
-    } else {
-      NULL
+      } else {
+         NULL
     }
   })
 
