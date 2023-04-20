@@ -64,6 +64,9 @@ sidebar <- dashboardSidebar(
   minified = FALSE,
   sidebarMenu(
     id = "sidebar",
+    tags$head(
+      tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+    ),
     menuItem("Home", tabName = "dashboard", icon = icon("home")),
     menuItem("Seasonality",
       icon = icon("leaf"), tabName = "seasonality"
@@ -84,16 +87,15 @@ sidebar <- dashboardSidebar(
     menuItem("Forecast",
       icon = icon("line-chart"),
       numericInputIcon(
-             inputId = "horizon", "Forecast Horizon", min = 1, value = 10, step = 1,
-             icon = list(icon("calendar"),"Months"),width = "200px"
-           ),
-         selectizeInput("typefore",
-          "Forecast Model:",
-           selected = "Snaive",
-          choices = c("Snaive", "Naive", "Drift", "Mean", "TSLM", "Exponential Smoothing" = "SES", "Arima")
-         )
+        inputId = "horizon", "Forecast Horizon", min = 1, value = 10, step = 1,
+        icon = list(icon("calendar"), "Months"), width = "200px"
+      ),
+      selectizeInput("typefore",
+        "Forecast Model:",
+        selected = "Snaive",
+        choices = c("Snaive", "Naive", "Drift", "Mean", "TSLM", "Exponential Smoothing" = "SES", "Arima")
+      )
     ),
-    
     selectizeInput("asset",
       "Stock Name:",
       choices = Valid_ticks$Symbol,
@@ -129,7 +131,7 @@ body <- dashboardBody(
     color = "#0066B6", id = c(
       "series", "season", "ggseason", "autoq", "autolag", "decompq",
       "interp_series", "interp_season", "interp_ggseason",
-      "interp_autoq", "interp_decompq","stonk","season1","autoq1","decompq1"
+      "interp_autoq", "interp_decompq", "stonk", "season1", "autoq1", "decompq1"
     ),
     fadeout = TRUE
   ),
@@ -141,7 +143,7 @@ body <- dashboardBody(
       tabName = "dashboard",
       h2("Stock Information"),
       fluidRow(
-        box(title = textOutput("title"), plotOutput("series", height = 490), width = 7, hr(),box(id="forenotes",title="Forecast Note",textOutput("forenote"), width = 12)),
+        box(title = textOutput("title"), plotOutput("series", height = 490), width = 7, hr(), box(id = "forenotes", title = "Forecast Note", textOutput("forenote"), width = 12)),
         setShadow(id = "series"),
         tabBox(tabPanel("Stonk Quotes", DTOutput("stonk"), icon = icon("table")),
           tabPanel("Seasonality", plotlyOutput("season1"), icon = icon("leaf")),
@@ -162,9 +164,10 @@ body <- dashboardBody(
       tabName = "seasonality",
       h2("Seasonality"),
       fluidRow(
-      box(title = textOutput("seas"), background = "light-blue", plotlyOutput("season")),
-      setShadow(id = "season"),
-      box(title = textOutput("seeass"), background = "light-blue", plotlyOutput("ggseason"))),
+        box(title = textOutput("seas"), background = "light-blue", plotlyOutput("season")),
+        setShadow(id = "season"),
+        box(title = textOutput("seeass"), background = "light-blue", plotlyOutput("ggseason"))
+      ),
       setShadow(id = "ggseason")
     ),
     tabItem(
@@ -217,26 +220,25 @@ body <- dashboardBody(
 # Put them together into a dashboardPage
 ui <- shinydashboardPlus::dashboardPage(
   title = "Stonks with Math",
-  dashboardHeader(title = "Stonks with Math", userOutput('user')),
+  dashboardHeader(title = "Stonks with Math", userOutput("user")),
   sidebar,
   body,
   controlbar = dashboardControlbar(collapsed = TRUE, skinSelector())
 )
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
-  
   output$user <- renderUser({
     dashboardUser(
-      name = "Alexander Holmes", 
-      image = "https://avatars.githubusercontent.com/u/108624793?v=4", 
-      title = "Senate Tracker",
-      subtitle = "Creator", 
+      name = "Alexander Holmes",
+      image = "https://avatars.githubusercontent.com/u/108624793?v=4",
+      title = "Stonk Connoisseur ",
+      subtitle = "Creator",
       fluidRow(
         dashboardUserItem(
           width = 6,
           socialButton(
             href = "https://www.linkedin.com/in/aholmes0/",
-            icon = icon("linkedin",)
+            icon = icon("linkedin", )
           )
         ),
         dashboardUserItem(
@@ -249,9 +251,9 @@ server <- function(input, output, session) {
       )
     )
   })
-  
-  
-  
+
+
+
   output$title <- renderText({
     paste0("Stock Series: ", Valid_ticks[which(Valid_ticks$Symbol == input$asset), 2])
   })
@@ -278,8 +280,8 @@ server <- function(input, output, session) {
 
     series <- series +
       geom_vline(data = interp_senate, aes(xintercept = Transaction.Date, color = Type, text = Name)) +
-      scale_color_manual(values = cols)+
-      labs(x = "Date")+
+      scale_color_manual(values = cols) +
+      labs(x = "Date") +
       theme_bw() +
       theme(text = element_text(size = 12))
     series
@@ -295,8 +297,8 @@ server <- function(input, output, session) {
     interp %>%
       model(STL(adjusted, robust = T)) %>%
       components() %>%
-      autoplot()+
-      labs(x = "Date")+
+      autoplot() +
+      labs(x = "Date") +
       theme_bw() +
       theme(text = element_text(size = 12))
   })
@@ -311,8 +313,8 @@ server <- function(input, output, session) {
   output$interp_autoq <- renderPlotly({
     interp %>%
       ACF(adjusted, lag_max = 36) %>%
-      autoplot()+
-      labs(x = "Date")+
+      autoplot() +
+      labs(x = "Date") +
       theme_bw() +
       theme(text = element_text(size = 12))
   })
@@ -327,8 +329,8 @@ server <- function(input, output, session) {
     interp %>%
       model(STL(adjusted, robust = T)) %>%
       components() %>%
-      autoplot(season_year)+
-      labs(x = "Date")+
+      autoplot(season_year) +
+      labs(x = "Date") +
       theme_bw() +
       theme(text = element_text(size = 12))
   })
@@ -339,9 +341,8 @@ server <- function(input, output, session) {
           After January 2015, a slight increase in seasonality has emerged, but none as big as previously seen.")
   })
   output$interp_ggseason <- renderPlotly({
-    
-      gg_season(interp,adjusted)+
-      labs(x = "Date")+
+    gg_season(interp, adjusted) +
+      labs(x = "Date") +
       theme_bw() +
       theme(text = element_text(size = 12))
   })
@@ -352,13 +353,13 @@ server <- function(input, output, session) {
           Overall, seasonality has become less variant and stays relatively close to the trend.")
   })
   output$forenote <- renderText({
-    paste("The best forecast will ultimately depend on the stock picked but for the currently selected stock of AA, 
+    paste("The best forecast will ultimately depend on the stock picked but for the currently selected stock of AA,
           the naive model should suffice due to the impossibility to know where a stock price is moving. By forecasting around
           where the stock currently stands, it lends itself to having good performance without complexity.")
   })
 
-  
-  
+
+
   senate <- reactive({
     if (any(input$asset %in% Senator$Ticker) & !is.null(input$type)) {
       senate <- Senator %>%
@@ -431,34 +432,33 @@ server <- function(input, output, session) {
     cols <- c("Purchase" = "green", "Sale (Full)" = "red", "Sale (Partial)" = "orange", "Exchange" = "steelblue")
 
     if (!(is.null(stock())) & (is.null(senate()))) { # | nrow(senate()) == 0 )) {
-        autoplot(stock(), !!sym(input$column)) +
-        labs(y = paste0(input$asset, " ", input$column),x="Date") +
+      autoplot(stock(), !!sym(input$column)) +
+        labs(y = paste0(input$asset, " ", input$column), x = "Date") +
         theme_bw() +
-        theme(text = element_text(size = 20))+
-        guides(color=guide_legend(title.hjust=0.5))
-      
+        theme(text = element_text(size = 20)) +
+        guides(color = guide_legend(title.hjust = 0.5))
     } else if (is.null(input$sidebarItemExpanded) & !is.null(senate()) & !is.null(stock())) {
       series <- autoplot(stock(), !!sym(input$column)) +
-        labs(y = paste0(input$asset, " ", input$column),x="Date")
+        labs(y = paste0(input$asset, " ", input$column), x = "Date")
 
-        series +
+      series +
         geom_vline(data = senate(), aes(xintercept = as.Date(Transaction.Date), color = Type)) +
         scale_color_manual(values = cols) +
         theme_bw() +
-        theme(text = element_text(size = 20))+
-          guides(color=guide_legend(title.hjust=0.5))
-        
+        theme(text = element_text(size = 20)) +
+        guides(color = guide_legend(title.hjust = 0.5))
     } else if (input$sidebarItemExpanded == "Forecast" & !is.null(senate()) & !is.null(stock())) {
-      
-        forecastModels() %>%
+      forecastModels() %>%
         autoplot(stock(), level = NULL) +
-        labs(y = paste0(input$asset, " ", input$column),
-             x="Date") +
+        labs(
+          y = paste0(input$asset, " ", input$column),
+          x = "Date"
+        ) +
         geom_vline(data = senate(), aes(xintercept = as.Date(Transaction.Date), color = Type)) +
         scale_color_manual(values = cols) +
         theme_bw() +
-        theme(text = element_text(size = 20))+
-        guides(color=guide_legend(title.hjust=0.5))
+        theme(text = element_text(size = 20)) +
+        guides(color = guide_legend(title.hjust = 0.5))
     }
   })
 
@@ -468,43 +468,38 @@ server <- function(input, output, session) {
         stock() %>%
           model(SNAIVE(!!sym(input$column))) %>%
           forecast(h = input$horizon)
-        
       } else if (input$typefore == "Naive") {
         stock() %>%
           model(NAIVE(!!sym(input$column))) %>%
           forecast(h = input$horizon)
-        
       } else if (input$typefore == "Mean") {
         stock() %>%
           model(MEAN(!!sym(input$column))) %>%
           forecast(h = input$horizon)
-        
       } else if (input$typefore == "Drift") {
         stock() %>%
           model(NAIVE(!!sym(input$column) ~ drift())) %>%
           forecast(h = input$horizon)
-        
       } else if (input$typefore == "TSLM") {
         stock() %>%
           model(TSLM(!!sym(input$column) ~ trend() + season())) %>%
           forecast(h = input$horizon)
-        
       } else if (input$typefore == "SES") {
         stock() %>%
           model(ETS(!!sym(input$column))) %>%
           forecast(h = input$horizon)
-        
       } else if (input$typefore == "Arima") {
         stock() %>%
           model(ARIMA(!!sym(input$column))) %>%
           forecast(h = input$horizon)
-        
       } else {
-        shinyCatch(position = "top-right", 
-        message("This stonk is too young! (Move the date range further out to >=60 weeks)"))
+        shinyCatch(
+          position = "top-right",
+          message("This stonk is too young! (Move the date range further out to >=60 weeks)")
+        )
       }
-      } else {
-         NULL
+    } else {
+      NULL
     }
   })
 
@@ -523,11 +518,11 @@ server <- function(input, output, session) {
         stock() %>%
           model(X_13ARIMA_SEATS(!!sym(input$column) ~ seats())) %>%
           components()
-      } else if (input$model == "Classic - Multi"  & nrow(stock()) > 2) {
+      } else if (input$model == "Classic - Multi" & nrow(stock()) > 2) {
         stock() %>%
           model(classical_decomposition(!!sym(input$column), type = "multiplicative")) %>%
           components()
-      } else if (input$model == "Classic - Add"  & nrow(stock()) > 2) {
+      } else if (input$model == "Classic - Add" & nrow(stock()) > 2) {
         stock() %>%
           model(classical_decomposition(!!sym(input$column), type = "additive")) %>%
           components()
@@ -542,13 +537,13 @@ server <- function(input, output, session) {
   output$season <- renderPlotly({
     if (!is.null(models())) {
       if (input$model == "STL") {
-        autoplot(models(), season_year)+
-          labs(x = "Date")+
+        autoplot(models(), season_year) +
+          labs(x = "Date") +
           theme_bw() +
           theme(text = element_text(size = 15))
       } else {
-        autoplot(models(), seasonal)+
-          labs(x = "Date")+
+        autoplot(models(), seasonal) +
+          labs(x = "Date") +
           theme_bw() +
           theme(text = element_text(size = 15))
       }
@@ -556,29 +551,25 @@ server <- function(input, output, session) {
   })
 
   output$season1 <- renderPlotly({
-    gg_season(stock(),!!sym(input$column))+
-      labs(x = "Date")+
+    gg_season(stock(), !!sym(input$column)) +
+      labs(x = "Date") +
       theme_bw() +
       theme(text = element_text(size = 15))
-    
   })
   output$ggseason <- renderPlotly({
-  
-        gg_season(stock(),!!sym(input$column))+
-          labs(x = "Date")+
-          theme_bw() +
-          theme(text = element_text(size = 15))
-    
+    gg_season(stock(), !!sym(input$column)) +
+      labs(x = "Date") +
+      theme_bw() +
+      theme(text = element_text(size = 15))
   })
 
   output$autoq <- renderPlotly({
-    
     if (!is.null(models())) {
       if (nrow(stock()) > 1) {
         stock() %>%
           ACF(!!sym(input$column), lag_max = input$lags) %>%
-          autoplot()+
-          labs(x = "Lags")+
+          autoplot() +
+          labs(x = "Lags") +
           theme_bw() +
           theme(text = element_text(size = 15))
       } else {
@@ -592,8 +583,8 @@ server <- function(input, output, session) {
       if (nrow(stock()) > 1) {
         stock() %>%
           ACF(!!sym(input$column)) %>%
-          autoplot()+
-          labs(x = "Lags",y="ACF")+
+          autoplot() +
+          labs(x = "Lags", y = "ACF") +
           theme_bw() +
           theme(text = element_text(size = 15))
       } else {
@@ -612,8 +603,8 @@ server <- function(input, output, session) {
         lagged %>%
           autoplot(!!sym(input$column)) +
           geom_line(aes(x = date, y = stats::lag(!!sym(input$column), input$lags)), color = "#0066B6") +
-          ggtitle("Lagged Series")+
-          labs(x = "Date")+
+          ggtitle("Lagged Series") +
+          labs(x = "Date") +
           theme_bw() +
           theme(text = element_text(size = 15))
       } else {
@@ -624,8 +615,8 @@ server <- function(input, output, session) {
 
   output$decompq <- renderPlotly({
     if (!is.null(models())) {
-      autoplot(models())+
-        labs(x = "Date")+
+      autoplot(models()) +
+        labs(x = "Date") +
         theme_bw() +
         theme(text = element_text(size = 12))
     }
@@ -633,8 +624,8 @@ server <- function(input, output, session) {
 
   output$decompq1 <- renderPlotly({
     if (!is.null(models())) {
-      autoplot(models())+
-        labs(x = "Date")+
+      autoplot(models()) +
+        labs(x = "Date") +
         theme_bw() +
         theme(text = element_text(size = 12))
     }
