@@ -5,9 +5,9 @@ account: aholmes23
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 8868469
-bundleId: 7114030
+bundleId: 7146321
 url: https://aholmes23.shinyapps.io/SenateTracker/
-when: 1681998546.3645
-lastSyncTime: 1681998546.36452
+when: 1682652706.73365
+lastSyncTime: 1682652706.73366
 asMultiple: FALSE
 asStatic: FALSE

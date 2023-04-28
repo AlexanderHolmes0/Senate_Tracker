@@ -173,7 +173,7 @@ body <- dashboardBody(
     tabItem(
       tabName = "auto",
       h2("Autocorrelation"),
-      box(title = textOutput("autoo"), background = "light-blue", plotlyOutput("autoq"), hr(), plotlyOutput("autolag"), width = 8),
+      box(title = textOutput("autoo"), background = "light-blue", plotlyOutput("autoq"), hr(), plotlyOutput("autolag"), hr(), plotlyOutput("pauto") ,width = 8),
       setShadow(id = "autoq"),
       setShadow(id = "autolag"),
       box(title = "Maximum Lag", sliderInput("lags", "Lag Max Value",
@@ -492,11 +492,6 @@ server <- function(input, output, session) {
         stock() %>%
           model(ARIMA(!!sym(input$column))) %>%
           forecast(h = input$horizon)
-      } else {
-        shinyCatch(
-          position = "top-right",
-          message("This stonk is too young! (Move the date range further out to >=60 weeks)")
-        )
       }
     } else {
       NULL
@@ -569,15 +564,32 @@ server <- function(input, output, session) {
         stock() %>%
           ACF(!!sym(input$column), lag_max = input$lags) %>%
           autoplot() +
-          labs(x = "Lags") +
+          labs(x = "Lags", y="ACF") +
           theme_bw() +
           theme(text = element_text(size = 15))
+        
       } else {
         shinyCatch(position = "top-right", message("Not enuff time!"))
       }
     }
   })
-
+  
+  output$pauto <- renderPlotly({
+    if (!is.null(models())) {
+      if (nrow(stock()) > 1) {
+        stock() %>%
+          PACF(!!sym(input$column), lag_max = input$lags) %>%
+          autoplot() +
+          labs(x = "Lags", y="PACF") +
+          theme_bw() +
+          theme(text = element_text(size = 15))
+          
+      } else {
+        shinyCatch(position = "top-right", message("Not enuff time!"))
+      }
+    }
+  })
+  
   output$autoq1 <- renderPlotly({
     if (!is.null(models())) {
       if (nrow(stock()) > 1) {
@@ -595,18 +607,20 @@ server <- function(input, output, session) {
 
   output$autolag <- renderPlotly({
     if (!is.null(models())) {
-      if (nrow(stock()) > 1) {
+      if (nrow(stock()) > 0) {
+        
         lagged <- stock() %>%
           select(date, !!sym(input$column))
 
 
         lagged %>%
           autoplot(!!sym(input$column)) +
-          geom_line(aes(x = date, y = stats::lag(!!sym(input$column), input$lags)), color = "#0066B6") +
+          geom_line(aes(x = date, y = lag(!!sym(input$column), input$lags)), color = "#0066B6") +
           ggtitle("Lagged Series") +
           labs(x = "Date") +
           theme_bw() +
           theme(text = element_text(size = 15))
+        
       } else {
         shinyCatch(position = "top-right", message("Not enuff time!"))
       }
